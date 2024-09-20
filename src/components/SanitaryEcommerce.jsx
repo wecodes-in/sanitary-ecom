@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiSearch, FiShoppingCart, FiHeart, FiMenu } from "react-icons/fi";
+import { FiSearch, FiShoppingCart, FiHeart, FiMenu, FiX } from "react-icons/fi";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 
 const SanitaryEcommerce = () => {
@@ -7,6 +7,7 @@ const SanitaryEcommerce = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [cartItems, setCartItems] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const categories = [
     { id: 1, name: "Bathroom", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" },
@@ -140,7 +141,7 @@ const SanitaryEcommerce = () => {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Sanitary E-commerce</h1>
           <div className="flex items-center space-x-4">
-            <div className="relative">
+            <div className="relative hidden md:block">
               <input
                 type="text"
                 placeholder="Search"
@@ -150,29 +151,38 @@ const SanitaryEcommerce = () => {
             </div>
             <FiShoppingCart className="text-2xl text-gray-600 cursor-pointer" />
             <FiHeart className="text-2xl text-gray-600 cursor-pointer" />
-            <FiMenu className="text-2xl text-gray-600 cursor-pointer md:hidden" />
+            <button
+              className="text-2xl text-gray-600 cursor-pointer md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <FiX /> : <FiMenu />}
+            </button>
           </div>
         </div>
       </header>
 
-      <nav className="bg-gray-800 text-white">
+      <nav className={`bg-gray-800 text-white ${isMenuOpen ? 'block' : 'hidden'} md:block`}>
         <div className="container mx-auto px-4 py-2">
-          <ul className="flex space-x-4">
-            <li>
+          <ul className="flex flex-col md:flex-row md:space-x-4">
+            <li className="py-2 md:py-0">
               <button
-                className={`py-2 px-4 rounded ${activeTab === "home" ? "bg-blue-500" : ""}`}
-                onClick={() => setActiveTab("home")}
+                className={`w-full text-left py-2 px-4 rounded ${activeTab === "home" ? "bg-blue-500" : "bg-gray-800"}`}
+                onClick={() => {
+                  setActiveTab("home");
+                  setIsMenuOpen(false);
+                }}
               >
                 Home
               </button>
             </li>
             {categories.map((category) => (
-              <li key={category.id}>
+              <li key={category.id} className="py-2 md:py-0">
                 <button
-                  className={`py-2 px-4 rounded ${selectedCategory?.id === category.id ? "bg-blue-500" : ""}`}
+                  className={`w-full text-left py-2 px-4 rounded ${selectedCategory?.id === category.id ? "bg-blue-500" : "bg-gray-800"}`}
                   onClick={() => {
                     setSelectedCategory(category);
                     setActiveTab("category");
+                    setIsMenuOpen(false);
                   }}
                 >
                   {category.name}
